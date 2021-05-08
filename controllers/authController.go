@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"os"
 	"strconv"
 	"time"
 
@@ -69,7 +68,7 @@ func Login(c *fiber.Ctx) error {
 		ExpiresAt: time.Now().Add(time.Hour * 24).Unix(),
 	})
 
-	token, err := claims.SignedString([]byte(os.Getenv("JWT_TOKEN")))
+	token, err := claims.SignedString([]byte("secret"))
 
 	if err != nil {
 		c.Status(fiber.StatusInternalServerError)
@@ -95,7 +94,7 @@ func GetUser(c *fiber.Ctx) error {
 	cookie := c.Cookies("jwt")
 
 	token, err := jwt.ParseWithClaims(cookie, &jwt.StandardClaims{}, func(token *jwt.Token) (interface{}, error) {
-		return []byte(os.Getenv("JWT_TOKEN")), nil
+		return []byte("secret"), nil
 	})
 
 	if err != nil {
